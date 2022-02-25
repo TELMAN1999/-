@@ -1,18 +1,23 @@
 import os
-
+import json
 
 path = os.path.abspath('dir1')
 
+mydict = {}
+mylist = ["telman", "ani","davit"]
+
 def obxodFile(path, level=1):
-    print('Level=', level, 'Content:', os.listdir(path))
     for i in os.listdir(path):
+        if os.path.isfile(path + '/' + i):
+            with open(path + "/" + i, 'r') as f:
+                text = f.read()
+                for j in text.split():
+                    if j.find('@') != -1:
+                        for k in mylist:
+                            if k in j :
+                                mydict[k] = j
         if os.path.isdir(path + '/' + i):
-            print('Спускаемся', path + '/' + i)
             obxodFile(path + '/' + i, level + 1)
-            print('Возвращаемся в', path)
 obxodFile(path)
-
-
-#path = os.path.abspath('dir2')
-print(path)
-
+y = json.dumps(mydict)
+print(y)
