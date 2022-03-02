@@ -7,35 +7,44 @@ email_regex = re.compile(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b')
 
 path = os.path.abspath('dir2')
 
-sinvol = ['.', ':', '-','_', '`', '~', '!', '#', '$', '%', '^', '*', '(' , ')', '=', '+', '/', '|' ]
+simvol = [':', '-','_', '`', '~', '!', '#', '$', '%', '^', '*', '(' , ')', '=', '+', '/', '|', '.']
 mydict = {}
-mylist = ["telman", "ani","davit"]
+F_lst = []
+
+def filersearch(text):
+    name, pos_sin, pos = None, None, None
+    for mail in text.split():
+        if email_regex.match(mail) != None:
+            pos = mail.find("@")
+            for k in simvol:
+                if k in mail:
+                   pos_sin = mail.find(k)
+                   return mail, pos_sin, pos
+    return mail, pos_sin, pos
 
 def obxodFile(path, level=1):
     for i in os.listdir(path):
         if os.path.isfile(path + '/' + i):
             with open(path + "/" + i, 'r') as f:
                 text = f.read()
-                for j in text.split():
-                    if email_regex.match(j) != None:
-                        print(j)
-                        p= j.find('@')
-                        print(p)
-                        for k in sinvol:
-                            if k in j:
-                                o = j.find(k)
-                                print(o)
-                                break
-                        a = j[o+1:p]
-                        print(a)
-                        x = j.split()
-                        print(x)
-                        mydict[a] = x
+                mail, pos_sin, pos = filersearch(text)
+                if mail and pos_sin and pos:
+                    name = mail[pos_sin+1:pos]
+                    print(mail, pos_sin, pos)
+                    spl_mail = mail.split(name)
+                    F_mail = spl_mail[0]+spl_mail[1]
+                    lst = F_mail.split()
+                    mydict[name] = lst
+               ### F_lst.append(mydict)
+                    print(mydict)
+                    dict.clear(mydict)
+                    print(mydict)
+
         if os.path.isdir(path + '/' + i):
             obxodFile(path + '/' + i, level + 1)
 obxodFile(path)
-y = json.dumps(mydict)
-print(y)
+F_lst.append(mydict)
+d_json = json.dumps(F_lst)
 my_file = open("File.json", "w+")
-my_file.write(y)
+my_file.write(d_json)
 my_file.close()
