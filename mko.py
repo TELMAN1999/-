@@ -30,20 +30,23 @@ def obxodFile(path, level=1):
                 mail, pos_sin, pos = filersearch(text)
                 if mail and pos_sin and pos:
                     name = mail[pos_sin+1:pos]
-                    print(mail, pos_sin, pos)
                     spl_mail = mail.split(name)
                     F_mail = spl_mail[0]+spl_mail[1]
                     lst = F_mail.split()
                     mydict[name] = lst
-               ### F_lst.append(mydict)
-                    print(mydict)
-                    dict.clear(mydict)
-                    print(mydict)
-
         if os.path.isdir(path + '/' + i):
             obxodFile(path + '/' + i, level + 1)
+
+def MySortDict(mydict):
+    vel = sorted(mydict)
+    for i in range(len(mydict)):
+        NewDict = {}
+        key = vel[i]
+        NewDict[key] = mydict[key]
+        F_lst.append(NewDict)
+
 obxodFile(path)
-F_lst.append(mydict)
+MySortDict(mydict)
 d_json = json.dumps(F_lst)
 my_file = open("File.json", "w+")
 my_file.write(d_json)
